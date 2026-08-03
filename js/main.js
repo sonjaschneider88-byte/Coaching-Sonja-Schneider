@@ -158,6 +158,15 @@
   }
 
   /* ---------- Scroll-Reveal ---------- */
+  // Auf den Rechtsseiten jeden Textblock einzeln einblenden ("fade in bei Absätzen")
+  var legalWrap = document.querySelector(".legal .wrap");
+  if (legalWrap) {
+    Array.prototype.forEach.call(
+      legalWrap.querySelectorAll("h1, h2, h3, p, ul, .placeholder-box"),
+      function (el) { el.classList.add("reveal"); }
+    );
+  }
+
   var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
   var reduceMotion = prefersReduced;
   if (reduceMotion || !("IntersectionObserver" in window)) {

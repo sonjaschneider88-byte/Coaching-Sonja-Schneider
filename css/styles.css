@@ -528,23 +528,6 @@ a { color: var(--sage-text); }
   object-fit: cover;
   box-shadow: 0 24px 50px -30px rgba(43,45,42,0.45);
 }
-.about__placeholder {
-  border-radius: var(--radius-lg);
-  aspect-ratio: 4 / 5;
-  width: 100%;
-  background:
-    radial-gradient(120% 90% at 20% 0%, rgba(110,139,116,0.18), transparent 60%),
-    var(--sand-deep);
-  border: 1px dashed var(--line-strong);
-  display: grid;
-  place-content: center;
-  text-align: center;
-  padding: 2rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-.about__placeholder svg { margin: 0 auto 0.6rem; color: var(--sage-text); }
-
 .about__quote {
   font-family: var(--font-head);
   font-size: clamp(1.35rem, 2.5vw, 1.85rem);
@@ -867,11 +850,24 @@ a { color: var(--sage-text); }
   white-space: nowrap; border: 0;
 }
 
-/* Scroll-Reveal */
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.reveal.is-in { opacity: 1; transform: none; }
+/* Scroll-Reveal (fade in + leichtes Aufsteigen beim Scrollen) */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--ease-quint), transform 0.7s var(--ease-quint);
+}
+.js .reveal.is-in { opacity: 1; transform: none; }
+
+/* Sanfte Staffelung innerhalb von Gruppen (Kacheln / Fakten) */
+.js .tiles .reveal:nth-child(2) { transition-delay: 0.07s; }
+.js .tiles .reveal:nth-child(3) { transition-delay: 0.14s; }
+.js .tiles .reveal:nth-child(4) { transition-delay: 0.21s; }
+.js .tiles .reveal:nth-child(5) { transition-delay: 0.28s; }
+.js .facts .reveal:nth-child(2) { transition-delay: 0.09s; }
+.js .facts .reveal:nth-child(3) { transition-delay: 0.18s; }
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; }
+  .js .reveal { opacity: 1 !important; transform: none !important; }
 }
 
 /* =====================================================================
