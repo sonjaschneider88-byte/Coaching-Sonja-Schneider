@@ -196,8 +196,8 @@
       var updateQuotes = function () {
         qTicking = false;
         var vh = window.innerHeight;
-        var line = vh * 0.72;   // Erhellungslinie
-        var band = vh * 0.16;   // Weichzeichnungs-Band für den Übergang
+        var line = vh * 0.6;    // Erhellungslinie (höher im Viewport)
+        var band = vh * 0.09;   // Übergangs-Band (härter/knapper)
         quoteReveals.forEach(function (words) {
           words.forEach(function (w) {
             var top = w.getBoundingClientRect().top;
