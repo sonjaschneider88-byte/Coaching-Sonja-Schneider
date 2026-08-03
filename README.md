@@ -33,6 +33,29 @@ python3 -m http.server 8000
 
 ---
 
+## Intro-Animation
+
+Beim ersten Laden läuft ein ruhiges Intro (nachempfunden der Referenz
+danielstoopendaal.nl, aber als schlanke Eigenumsetzung **ohne** GSAP/Lenis/Webflow):
+
+1. Vollflächiges Loader-Overlay in Papierfarbe; die Wortmarke „Sonja Schneider"
+   läuft per Masken-Reveal ein, darunter Rolle + Salbei-Linie.
+2. Das Overlay zieht nach oben weg (Quintic-Easing, wie in der Referenz gemessen).
+3. Die Hero-Elemente enthüllen sich gestaffelt: Headline wortweise von unten,
+   Eyebrow/Subline/Buttons/Meta gleiten ein, das Portrait wird per Clip-Path +
+   leichtem Zoom aufgedeckt.
+
+Details:
+- **Easing** exakt aus der Referenz übernommen: `outQuint` / `inOutQuint`.
+- Läuft **einmal pro Browser-Session** (`sessionStorage`) – kein erneutes Abspielen
+  beim Zurücknavigieren von Impressum/Datenschutz.
+- Respektiert `prefers-reduced-motion`: Intro wird dann übersprungen, Inhalte sind
+  sofort sichtbar.
+- Ohne JavaScript wird das Overlay gar nicht erst angezeigt (Inhalte bleiben
+  vollständig zugänglich).
+
+---
+
 ## Design-Empfehlung (zur Freigabe durch die Kundin)
 
 Die Kundin hatte drei Farbwelten offen gelassen. **Empfehlung: Salbeigrün +
@@ -89,29 +112,45 @@ Spamschutz: Ein verstecktes Honeypot-Feld (`_gotcha`) ist bereits eingebaut.
 
 ---
 
-## Offene Punkte – mit der Kundin (Sonja) klären
+## Deployment auf GitHub Pages (Zwischenlösung)
 
-> **Wichtig:** Die Seite darf erst live gehen, wenn die rechtlich und inhaltlich
-> nötigen Punkte geklärt sind.
+Die Seite geht als Zwischenstand („im Aufbau") öffentlich auf GitHub Pages; das
+finale Hosting folgt später auf **IONOS**.
 
-1. **Foto** – hochauflösendes Original des Portraitfotos liefern. Das gelieferte
-   Flyer-Bild ist nur **604×774 px** und dient aktuell als Platzhalter (für Hero
-   & OG-Vorschau ideal wäre ≥ 1200 px Breite).
-2. **Farbwelt** – Empfehlung Salbeigrün (siehe oben) freigeben oder Alternative
-   wählen.
-3. **E-Mail-Adresse** – welche ist offiziell?
-   `kontakt@sonja-schneider.coach` (aktuell hinterlegt) oder
-   `sonja.schneider.88@gmail.com`? Betrifft `index.html`, `js/main.js`,
-   `impressum.html`, `datenschutz.html`.
-4. **Domain & Hosting** – ist `sonja-schneider.coach` reserviert? Wo wird
-   gehostet? Bestimmt auch die finale Formular-Lösung.
-5. **Impressum & Datenschutz** – vollständige Pflichtangaben (ladungsfähige
-   Anschrift, ggf. USt-ID, eingesetzte Tools) ergänzen. Aktuell Platzhalter.
-6. **Logo** – vorhanden, oder bleibt es bei der typografischen Wortmarke
-   (aktuell umgesetzt)?
+1. Im Repo: **Settings → Pages → Build and deployment → Source: „Deploy from a
+   branch"**, Branch **`main`**, Ordner **`/ (root)`**, speichern.
+2. Nach ~1 Minute erreichbar unter
+   `https://sonjaschneider88-byte.github.io/Coaching-Sonja-Schneider/`.
+3. Eine leere `.nojekyll`-Datei liegt bereits im Repo (verhindert Jekyll-
+   Verarbeitung). Alle Pfade sind relativ – die Seite funktioniert auch im
+   Unterordner-URL von GitHub Pages.
 
-Ein zweites, persönlicheres Foto für „Über mich" ist optional – der Platz dafür
-ist bereits eingeplant (Platzhalter in `index.html`).
+> Hinweis: Die `og:`- und `canonical`-URLs im `<head>` zeigen bereits auf die
+> geplante Domain `sonja-schneider.coach`. Für die reine GitHub-Vorschau ist das
+> unkritisch; beim IONOS-Live-Gang bleiben sie korrekt.
+
+---
+
+## Offene Punkte
+
+> **Wichtig:** Für einen öffentlich **beworbenen** Betrieb müssen die rechtlichen
+> Punkte (v. a. Impressum-Anschrift) ergänzt werden. Ein dezenter „im Aufbau"-
+> Hinweis steht im Footer.
+
+**Erledigt / entschieden:**
+- E-Mail: vorläufig **`sonja.schneider.88@gmail.com`** (überall eingesetzt).
+- Hosting: **GitHub Pages** als Zwischenlösung, **IONOS** später.
+- Logo: bleibt vorerst **typografische Wortmarke**.
+- Farbwelt: **Salbeigrün** umgesetzt (weiterhin zur finalen Freigabe durch Sonja).
+
+**Noch offen / von Sonja nötig:**
+1. **Foto** – hochauflösendes Original (aktuell nur **604×774 px** Platzhalter;
+   für Hero & OG ideal ≥ 1200 px). Ein optionales zweites Foto für „Über mich"
+   ist eingeplant.
+2. **Impressum-Anschrift** – ladungsfähige Anschrift, ggf. USt-IdNr. ergänzen und
+   die Platzhalter-Boxen in `impressum.html` / `datenschutz.html` entfernen.
+3. **Formspree-ID** – eintragen, sobald gewünscht (bis dahin `mailto`-Fallback).
+4. **Domain** – `sonja-schneider.coach` reservieren, sobald IONOS-Umzug ansteht.
 
 ---
 
@@ -123,6 +162,9 @@ ein Lighthouse-Lauf auf der Zielumgebung stehen zur Endabnahme noch an.
 
 | Bereich | Prüfung | Ergebnis |
 |---|---|---|
+| Intro-Animation | Loader-Reveal → Overlay-Lift → Hero-Stagger | ✅ läuft durch, Wortmarke zentriert, nichts bleibt hängen |
+| Intro – reduced motion | `prefers-reduced-motion` | ✅ Intro übersprungen, Inhalt sofort da |
+| Intro – ohne JS | Overlay darf nicht blockieren | ✅ Overlay nur bei aktivem JS sichtbar |
 | Layout Desktop (1280px) | Hero, alle 6 Sektionen, Footer | ✅ sauber, editorial, dominantes Portrait |
 | Layout Mobile (375px) | Hero-Cropping, Stapelung, Lesbarkeit | ✅ Gesicht voll sichtbar, kein Layout-Bruch |
 | Kein horizontaler Overflow | `scrollWidth === innerWidth` | ✅ (391 = 391) |
