@@ -172,16 +172,22 @@
   if (reduceMotion || !("IntersectionObserver" in window)) {
     reveals.forEach(function (el) { el.classList.add("is-in"); });
   } else {
+    // Re-triggering: blendet ein, wenn ein Element ins Bild kommt – und setzt zurück,
+    // sobald es wieder UNTER das Sichtfenster rutscht (beim Hochscrollen). Dadurch
+    // spielt der Effekt erneut, wenn man ohne Reload wieder von oben nach unten scrollt.
     var revObserver = new IntersectionObserver(
-      function (entries, obs) {
+      function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-in");
-            obs.unobserve(entry.target);
+          } else if (entry.boundingClientRect.top > 0) {
+            // Element ist (wieder) unterhalb des Sichtfensters → zurücksetzen.
+            // Nach oben aus dem Bild gescrollte Elemente (top < 0) bleiben sichtbar.
+            entry.target.classList.remove("is-in");
           }
         });
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 }
+      { rootMargin: "0px 0px -10% 0px", threshold: 0 }
     );
     reveals.forEach(function (el) { revObserver.observe(el); });
   }
