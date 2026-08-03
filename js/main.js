@@ -167,7 +167,25 @@
     );
   }
 
-  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  // Zitat(e) für den Wort-für-Wort-Reveal in einzelne Wörter zerlegen
+  Array.prototype.forEach.call(document.querySelectorAll(".word-reveal"), function (el) {
+    if (el.dataset.split === "1") return;
+    var words = el.textContent.trim().split(/\s+/);
+    var frag = document.createDocumentFragment();
+    words.forEach(function (word, i) {
+      var span = document.createElement("span");
+      span.className = "rw";
+      span.style.setProperty("--wi", i);
+      span.textContent = word;
+      frag.appendChild(span);
+      if (i < words.length - 1) frag.appendChild(document.createTextNode(" "));
+    });
+    el.textContent = "";
+    el.appendChild(frag);
+    el.dataset.split = "1";
+  });
+
+  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal, .word-reveal"));
   var reduceMotion = prefersReduced;
   if (reduceMotion || !("IntersectionObserver" in window)) {
     reveals.forEach(function (el) { el.classList.add("is-in"); });
@@ -191,6 +209,43 @@
     );
     reveals.forEach(function (el) { revObserver.observe(el); });
   }
+
+  /* ---------- Karussell (Anlässe) – manuell, kein Autoplay ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-carousel]"), function (root) {
+    var track = root.querySelector(".carousel__track");
+    var controls = root.querySelector(".carousel__controls");
+    var prev = root.querySelector("[data-carousel-prev]");
+    var next = root.querySelector("[data-carousel-next]");
+    if (!track) return;
+
+    function stepAmount() {
+      var tile = track.querySelector(".tile");
+      var styles = getComputedStyle(track);
+      var gap = parseFloat(styles.columnGap || styles.gap) || 16;
+      var tileW = tile ? tile.getBoundingClientRect().width + gap : track.clientWidth;
+      // pro Klick ~ eine Seite weiter (mindestens eine Kachel, eine bleibt als Kontext stehen)
+      return Math.max(tileW, track.clientWidth - tileW);
+    }
+
+    function update() {
+      var maxScroll = track.scrollWidth - track.clientWidth - 1;
+      var overflow = track.scrollWidth > track.clientWidth + 2;
+      if (controls) controls.hidden = !overflow;
+      if (prev) prev.disabled = track.scrollLeft <= 1;
+      if (next) next.disabled = track.scrollLeft >= maxScroll;
+    }
+
+    if (prev) prev.addEventListener("click", function () {
+      track.scrollBy({ left: -stepAmount(), behavior: prefersReduced ? "auto" : "smooth" });
+    });
+    if (next) next.addEventListener("click", function () {
+      track.scrollBy({ left: stepAmount(), behavior: prefersReduced ? "auto" : "smooth" });
+    });
+    track.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    window.addEventListener("load", update);
+    update();
+  });
 
   /* ---------- Kontaktformular ---------- */
   var form = document.getElementById("contact-form");
