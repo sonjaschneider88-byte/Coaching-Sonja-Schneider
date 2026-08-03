@@ -167,25 +167,57 @@
     );
   }
 
-  // Zitat(e) für den Wort-für-Wort-Reveal in einzelne Wörter zerlegen
-  Array.prototype.forEach.call(document.querySelectorAll(".word-reveal"), function (el) {
-    if (el.dataset.split === "1") return;
+  /* ---- Scroll-gebundener Text-Reveal fürs Zitat (ScrollTrigger-Stil) ---- */
+  var quoteReveals = [];
+  Array.prototype.forEach.call(document.querySelectorAll(".quote-reveal"), function (el) {
     var words = el.textContent.trim().split(/\s+/);
     var frag = document.createDocumentFragment();
+    var spans = [];
     words.forEach(function (word, i) {
       var span = document.createElement("span");
-      span.className = "rw";
-      span.style.setProperty("--wi", i);
+      span.className = "qw";
       span.textContent = word;
       frag.appendChild(span);
+      spans.push(span);
       if (i < words.length - 1) frag.appendChild(document.createTextNode(" "));
     });
     el.textContent = "";
     el.appendChild(frag);
-    el.dataset.split = "1";
+    quoteReveals.push(spans);
   });
 
-  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal, .word-reveal"));
+  if (quoteReveals.length) {
+    if (prefersReduced) {
+      quoteReveals.forEach(function (words) {
+        words.forEach(function (w) { w.style.opacity = "1"; });
+      });
+    } else {
+      var qTicking = false;
+      var updateQuotes = function () {
+        qTicking = false;
+        var vh = window.innerHeight;
+        var line = vh * 0.72;   // Erhellungslinie
+        var band = vh * 0.16;   // Weichzeichnungs-Band für den Übergang
+        quoteReveals.forEach(function (words) {
+          words.forEach(function (w) {
+            var top = w.getBoundingClientRect().top;
+            var p = (line - top) / band;
+            if (p < 0) p = 0; else if (p > 1) p = 1;
+            w.style.opacity = (0.18 + 0.82 * p).toFixed(3);
+          });
+        });
+      };
+      var onQScroll = function () {
+        if (!qTicking) { qTicking = true; requestAnimationFrame(updateQuotes); }
+      };
+      window.addEventListener("scroll", onQScroll, { passive: true });
+      window.addEventListener("resize", onQScroll);
+      window.addEventListener("load", updateQuotes);
+      updateQuotes();
+    }
+  }
+
+  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
   var reduceMotion = prefersReduced;
   if (reduceMotion || !("IntersectionObserver" in window)) {
     reveals.forEach(function (el) { el.classList.add("is-in"); });

@@ -577,14 +577,19 @@ a { color: var(--sage-text); }
   object-fit: cover;
   box-shadow: 0 24px 50px -30px rgba(43,45,42,0.45);
 }
+/* Zitat als eigener Baustein oberhalb des Bildes */
+.about__intro {
+  max-width: 54rem;
+  margin: 0 0 clamp(2.5rem, 6vw, 4.5rem);
+}
 .about__quote {
   font-family: var(--font-head);
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.38;
   color: var(--ink);
-  margin: 0 0 1.6rem;
-  padding-left: 1.4rem;
+  margin: 0.6rem 0 0;
+  padding-left: clamp(1.2rem, 2vw, 1.8rem);
   border-left: 3px solid var(--sage);
 }
 .about__body p { color: var(--muted); }
@@ -959,19 +964,11 @@ a { color: var(--sage-text); }
 .js .facts .reveal:nth-child(2) { transition-delay: 0.09s; }
 .js .facts .reveal:nth-child(3) { transition-delay: 0.18s; }
 
-/* Wort-für-Wort-Reveal (Zitat) */
-.word-reveal .rw { display: inline-block; }
-.js .word-reveal .rw {
-  opacity: 0;
-  transform: translateY(0.5em);
-  filter: blur(6px);
-  transition: opacity 0.55s var(--ease-quint), transform 0.55s var(--ease-quint),
-    filter 0.55s var(--ease-quint);
-  transition-delay: calc(var(--wi, 0) * 45ms);
-}
-.js .word-reveal.is-in .rw { opacity: 1; transform: none; filter: blur(0); }
+/* Scroll-gebundener Text-Reveal (Zitat oberhalb des Bildes, ScrollTrigger-Stil) */
+.quote-reveal .qw { display: inline-block; }
+.js .quote-reveal .qw { opacity: 0.2; will-change: opacity; }
 @media (prefers-reduced-motion: reduce) {
-  .js .word-reveal .rw { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .js .quote-reveal .qw { opacity: 1 !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
