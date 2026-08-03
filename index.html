@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Markiert JS-Verfügbarkeit früh, damit die Intro-Animation ohne FOUC startet -->
+  <script>document.documentElement.classList.add('js');</script>
+
   <title>Sonja Schneider – Systemisches Coaching in Heidelberg &amp; Online</title>
   <meta name="description" content="Systemisches Coaching für berufliche &amp; persönliche Orientierung und Entscheidungsfindung – in Heidelberg und online. Raum für neue Perspektiven und klare Entscheidungen.">
   <meta name="author" content="Sonja Schneider">
@@ -53,6 +56,15 @@
 <body>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
+  <!-- =============== Intro / Loader =============== -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro__inner">
+      <span class="intro__line"><span class="intro__name">Sonja Schneider</span></span>
+      <span class="intro__role">Systemisches Coaching</span>
+      <div class="intro__rule"></div>
+    </div>
+  </div>
+
   <!-- =============== Header =============== -->
   <header class="site-header" id="site-header">
     <div class="header-inner">
@@ -81,17 +93,17 @@
     <section class="hero" id="hero" aria-labelledby="hero-title">
       <div class="wrap hero__grid">
         <div class="hero__content">
-          <span class="eyebrow">Systemisches Coaching</span>
-          <h1 id="hero-title">Raum für neue Perspektiven &amp; klare Entscheidungen</h1>
-          <p class="hero__sub">Systemisches Coaching in Heidelberg &amp; Online.</p>
-          <div class="hero__actions">
+          <span class="eyebrow" data-animate style="--i:0">Systemisches Coaching</span>
+          <h1 id="hero-title" data-animate-heading>Raum für neue Perspektiven &amp; klare Entscheidungen</h1>
+          <p class="hero__sub" data-animate style="--i:2">Systemisches Coaching in Heidelberg &amp; Online.</p>
+          <div class="hero__actions" data-animate style="--i:3">
             <a class="btn" href="#kontakt">
               Erstgespräch anfragen
               <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
             <a class="btn btn--ghost" href="#anlaesse">Anlässe entdecken</a>
           </div>
-          <div class="hero__meta">
+          <div class="hero__meta" data-animate style="--i:4">
             <span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Raum Heidelberg &amp; Online
@@ -104,7 +116,7 @@
         </div>
 
         <div class="hero__portrait">
-          <figure>
+          <figure data-animate="portrait">
             <picture>
               <source
                 type="image/webp"
@@ -121,7 +133,7 @@
                 fetchpriority="high">
             </picture>
           </figure>
-          <div class="hero__badge">
+          <div class="hero__badge" data-animate style="--i:6">
             <strong>Systemische Coach i. A.</strong>
             <span>Orientierung &amp; Entscheidungsfindung</span>
           </div>
@@ -256,8 +268,8 @@
               <span class="ci" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
               <div>
                 <div class="cl">E-Mail</div>
-                <!-- TODO: finale Adresse mit Kundin klären (siehe README) -->
-                <a href="mailto:kontakt@sonja-schneider.coach">kontakt@sonja-schneider.coach</a>
+                <!-- Vorläufig: Gmail-Adresse (spätere Umstellung auf eigene Domain-Adresse möglich) -->
+                <a href="mailto:sonja.schneider.88@gmail.com">sonja.schneider.88@gmail.com</a>
               </div>
             </li>
             <li>
@@ -358,7 +370,7 @@
       </div>
       <div class="footer-bottom">
         <span>&copy; <span id="year">2026</span> Sonja Schneider. Alle Rechte vorbehalten.</span>
-        <span>Systemisches Coaching · Heidelberg &amp; Online</span>
+        <span class="footer-wip">Diese Website befindet sich im Aufbau.</span>
       </div>
     </div>
   </footer>

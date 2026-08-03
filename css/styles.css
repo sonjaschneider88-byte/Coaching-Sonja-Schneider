@@ -76,6 +76,10 @@
   --radius-lg: 22px;
   --header-h: 72px;
 
+  /* Easing (aus der Referenz übernommen: Quintic) */
+  --ease-quint: cubic-bezier(0.22, 1, 0.36, 1);        /* outQuint */
+  --ease-quint-inout: cubic-bezier(0.83, 0, 0.17, 1);  /* inOutQuint */
+
   /* Fließ-Typografie */
   --fs-hero: clamp(2.4rem, 6vw, 4.3rem);
   --fs-h2: clamp(1.75rem, 3.6vw, 2.6rem);
@@ -814,6 +818,18 @@ a { color: var(--sage-text); }
   font-size: 0.82rem;
   color: #94928a;
 }
+.footer-wip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.footer-wip::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--terracotta);
+}
 
 /* =====================================================================
    Rechtstexte (Impressum / Datenschutz)
@@ -856,4 +872,96 @@ a { color: var(--sage-text); }
 .reveal.is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; }
+}
+
+/* =====================================================================
+   Intro-Animation (Loader-Reveal + gestaffelte Hero-Reveals)
+   Nachempfunden der Referenz danielstoopendaal.nl – eigene, schlanke
+   Umsetzung ohne GSAP/Lenis/Webflow.
+   ===================================================================== */
+
+/* Loader-Overlay: nur bei aktivem JS sichtbar (ohne JS bleibt alles normal) */
+.intro { display: none; }
+.js .intro {
+  display: grid;
+  place-items: center;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--paper);
+  transform: translateY(0);
+  transition: transform 1s var(--ease-quint-inout);
+  will-change: transform;
+}
+.intro.is-out { transform: translateY(-101%); }
+
+.intro__inner { text-align: center; padding: 1.5rem; }
+.intro__line { display: block; overflow: hidden; padding-bottom: 0.08em; }
+.intro__name {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 6vw, 3.1rem);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  transform: translateY(115%);
+  transition: transform 0.85s var(--ease-quint);
+}
+.intro__role {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateY(140%);
+  transition: transform 0.7s var(--ease-quint) 0.12s, opacity 0.7s ease 0.12s;
+}
+.intro__rule {
+  width: 0;
+  height: 2px;
+  margin: 1.3rem auto 0;
+  background: var(--sage);
+  transition: width 0.9s var(--ease-quint) 0.2s;
+}
+.intro.is-in .intro__name { transform: translateY(0); }
+.intro.is-in .intro__role { transform: translateY(0); opacity: 1; }
+.intro.is-in .intro__rule { width: 64px; }
+
+/* Ausgangszustand der Hero-Elemente (nur mit JS) */
+.js [data-animate] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease-quint), transform 0.8s var(--ease-quint);
+  transition-delay: calc(var(--i, 0) * 85ms);
+}
+.js [data-animate="portrait"] {
+  transform: scale(1.06);
+  clip-path: inset(100% 0 0 0);
+  transition: opacity 1s var(--ease-quint), transform 1.2s var(--ease-quint),
+    clip-path 1.1s var(--ease-quint);
+  transition-delay: 0.15s;
+}
+html.reveal-hero [data-animate] { opacity: 1; transform: none; }
+html.reveal-hero [data-animate="portrait"] { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+
+/* Headline: wortweiser Masken-Reveal (Wörter werden per JS umschlossen) */
+.hero h1 .w-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; }
+.js .hero h1 .w-inner {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform 0.9s var(--ease-quint);
+  transition-delay: calc(var(--wi, 0) * 55ms + 0.15s);
+}
+html.reveal-hero .hero h1 .w-inner { transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .intro { display: none; }
+  .js [data-animate],
+  .js .hero h1 .w-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
 }

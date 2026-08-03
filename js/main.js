@@ -5,9 +5,87 @@
 (function () {
   "use strict";
 
+  var docEl = document.documentElement;
+  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* ---------- Jahr im Footer ---------- */
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  /* =====================================================================
+     Intro-Animation: Loader-Reveal + gestaffelte Hero-Reveals
+     ===================================================================== */
+  var intro = document.getElementById("intro");
+
+  // Headline wortweise in Masken verpacken (für den Reveal von unten)
+  function splitHeading() {
+    var h = document.querySelector("[data-animate-heading]");
+    if (!h || h.dataset.split === "1") return;
+    var words = h.textContent.trim().split(/\s+/);
+    var frag = document.createDocumentFragment();
+    words.forEach(function (word, i) {
+      var mask = document.createElement("span");
+      mask.className = "w-mask";
+      var inner = document.createElement("span");
+      inner.className = "w-inner";
+      inner.style.setProperty("--wi", i);
+      inner.textContent = word;
+      mask.appendChild(inner);
+      frag.appendChild(mask);
+      if (i < words.length - 1) frag.appendChild(document.createTextNode(" "));
+    });
+    h.textContent = "";
+    h.appendChild(frag);
+    h.dataset.split = "1";
+  }
+
+  function revealHero() {
+    docEl.classList.add("reveal-hero");
+  }
+
+  function runIntro() {
+    if (!intro) { revealHero(); return; }
+
+    splitHeading();
+
+    var seen = false;
+    try { seen = sessionStorage.getItem("sonja_intro") === "1"; } catch (e) {}
+
+    // Reduzierte Bewegung oder bereits gesehen: Intro überspringen
+    if (prefersReduced || seen) {
+      intro.parentNode && intro.parentNode.removeChild(intro);
+      revealHero();
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+
+    // Sequenz: Wortmarke einlaufen → Overlay hochziehen + Hero enthüllen → aufräumen
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { intro.classList.add("is-in"); });
+    });
+
+    window.setTimeout(function () {
+      intro.classList.add("is-out");
+      revealHero();
+    }, 1450);
+
+    window.setTimeout(function () {
+      document.body.style.overflow = "";
+      intro.parentNode && intro.parentNode.removeChild(intro);
+      try { sessionStorage.setItem("sonja_intro", "1"); } catch (e) {}
+    }, 2500);
+  }
+
+  // Erst nach vollständigem Laden starten (Schriften/Bild), max. kurze Wartezeit
+  if (document.readyState === "complete") {
+    runIntro();
+  } else {
+    var started = false;
+    var start = function () { if (!started) { started = true; runIntro(); } };
+    window.addEventListener("load", start);
+    window.setTimeout(start, 900); // Sicherheitsnetz, falls "load" spät kommt
+  }
 
   /* ---------- Mobile-Navigation ---------- */
   var toggle = document.getElementById("nav-toggle");
@@ -81,7 +159,7 @@
 
   /* ---------- Scroll-Reveal ---------- */
   var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduceMotion = prefersReduced;
   if (reduceMotion || !("IntersectionObserver" in window)) {
     reveals.forEach(function (el) { el.classList.add("is-in"); });
   } else {
@@ -159,7 +237,7 @@
     errorBox.classList.add("is-visible");
   }
 
-  var MAILTO_FALLBACK = "kontakt@sonja-schneider.coach"; // TODO: finale Adresse (siehe README)
+  var MAILTO_FALLBACK = "sonja.schneider.88@gmail.com"; // vorläufig Gmail (siehe README)
 
   function mailtoFallback() {
     var name = encodeURIComponent(form.elements["name"].value.trim());
