@@ -1067,20 +1067,20 @@ html.reveal-hero .hero h1 .w-inner { transform: translateY(0); }
   }
 }
 
-.site-header .wordmark {
+..site-logo {
+  display: block;
+  width: 58px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.wordmark {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.site-header .site-logo {
-  display: block;
-  width: 50px;
-  height: auto;
-  flex-shrink: 0;
-}
-
-.site-header .wordmark__text {
+.wordmark__text {
   display: flex;
   flex-direction: column;
   justify-content: center;
