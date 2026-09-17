@@ -1065,6 +1065,8 @@ html.reveal-hero .hero h1 .w-inner { transform: translateY(0); }
     transform: none !important;
     clip-path: none !important;
   }
+}
+
 .site-header .wordmark {
   display: flex;
   align-items: center;
