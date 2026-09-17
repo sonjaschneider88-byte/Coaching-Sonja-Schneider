@@ -1,6 +1,6 @@
 # Sonja Schneider – Systemisches Coaching (One-Pager)
 
-Statische One-Page-Website für **Sonja Schneider**, angehende systemische Coach
+Statische One-Page-Website für **Sonja Schneider**, angehende systemische Coachin
 (Schwerpunkt: berufliche & persönliche Orientierung, Entscheidungsfindung) –
 tätig in Heidelberg & online. Aufgebaut so, dass sie später problemlos zum
 Multi-Pager erweitert werden kann.
