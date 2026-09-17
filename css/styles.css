@@ -1069,7 +1069,7 @@ html.reveal-hero .hero h1 .w-inner { transform: translateY(0); }
 
 ..site-logo {
   display: block;
-  width: 68px;
+  width: 70px !important;
   height: auto;
   flex-shrink: 0;
 }
