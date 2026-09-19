@@ -1067,21 +1067,29 @@ html.reveal-hero .hero h1 .w-inner { transform: translateY(0); }
   }
 }
 
-..site-logo {
+/* Header logo: small, stable size on desktop and mobile */
+.site-header .site-logo {
   display: block;
-  width: 70px !important;
+  width: 50px;
   height: auto;
-  flex-shrink: 0;
+  flex: 0 0 50px;
 }
 
-.wordmark {
+.site-header .wordmark {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.wordmark__text {
+.site-header .wordmark__text {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+@media (max-width: 820px) {
+  .site-header .site-logo {
+    width: 44px;
+    flex-basis: 44px;
+  }
 }
